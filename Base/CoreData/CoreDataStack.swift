@@ -8,27 +8,29 @@
 import Foundation
 import CoreData
 
-class CoreDataStack {
+public class CoreDataStack {
     
-    static let share = CoreDataStack()
+    public static let share = CoreDataStack()
     
-    private let storeCoordinator: NSPersistentStoreCoordinator
-    let backgroundContext: NSManagedObjectContext
-    let mainContext: NSManagedObjectContext
+    private var storeCoordinator: NSPersistentStoreCoordinator?
+    public let backgroundContext: NSManagedObjectContext
+    public let mainContext: NSManagedObjectContext
     
-    public init() {
-        let path = Bundle.main.path(forResource: "CommonBundle", ofType: "bundle")!
-        let bundle = Bundle(path: path)!
-        guard let url = bundle.url(forResource: "Database", withExtension: "momd"),
-              let model = NSManagedObjectModel(contentsOf: url) else {
-            fatalError()
-        }
-        self.storeCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
+    init() {
         self.mainContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         self.backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        self.mainContext.persistentStoreCoordinator = self.storeCoordinator
-        self.backgroundContext.persistentStoreCoordinator = self.storeCoordinator
-        self.migrateStore()
+    }
+    
+    public func config(withPath path: String) {
+        let url = URL.init(fileURLWithPath: path)
+        guard let model = NSManagedObjectModel(contentsOf: url) else {
+            log.info("CoreDataStack", "configure failure path = \(path)")
+            return
+        }
+        self.storeCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
+        self.mainContext.persistentStoreCoordinator = self.storeCoordinator!
+        self.backgroundContext.persistentStoreCoordinator = self.storeCoordinator!
+        migrateStore()
     }
     
     private func migrateStore() {
@@ -40,12 +42,12 @@ class CoreDataStack {
         let mOptions = [NSMigratePersistentStoresAutomaticallyOption: true,
                                    NSInferMappingModelAutomaticallyOption: true]
         do {
-            try storeCoordinator.addPersistentStore(ofType: NSSQLiteStoreType,
+            try storeCoordinator!.addPersistentStore(ofType: NSSQLiteStoreType,
                     configurationName: nil,
                     at: storeUrl,
                     options: mOptions)
         } catch {
-            fatalError("Error migrating store: \(error)")
+            log.error("CoreDataStack migrateStore", "Error migrating store: \(error)")
         }
     }
 }

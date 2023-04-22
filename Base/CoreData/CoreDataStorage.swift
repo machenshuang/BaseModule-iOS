@@ -8,16 +8,16 @@
 import Foundation
 import CoreData
 
-class CoreDataStorage <T: Persistable> {
+public class CoreDataStorage <T: Persistable> {
     private let context: NSManagedObjectContext
     
-    init(context: NSManagedObjectContext) {
+    public init(context: NSManagedObjectContext) {
         self.context = context
     }
     
     // MARK: - 同步操作
     
-    func query(with predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?) throws -> [T]? {
+    public func query(with predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?) throws -> [T]? {
         let request = T.fetchRequest()
         request.predicate = predicate
         if let descriptors = sortDescriptors {
@@ -27,7 +27,7 @@ class CoreDataStorage <T: Persistable> {
         return entities
     }
     
-    func save(with predicate: NSPredicate?, update updateClosure: @escaping (T) -> Void) throws -> T {
+    public func save(with predicate: NSPredicate?, update updateClosure: @escaping (T) -> Void) throws -> T {
         let request = T.fetchRequest()
         let result: T
         if let predicate = predicate {
@@ -41,7 +41,7 @@ class CoreDataStorage <T: Persistable> {
         return result
     }
     
-    func delete(with predicate: NSPredicate) throws -> Bool {
+    public func delete(with predicate: NSPredicate) throws -> Bool {
         let request = T.fetchRequest()
         request.predicate = predicate
         guard let result = try self.context.fetch(request).first as? NSManagedObject else {
@@ -52,7 +52,7 @@ class CoreDataStorage <T: Persistable> {
         return true
     }
     
-    func batchInsert(with count: Int, update updateClosure: @escaping ([T]) -> Void) throws -> Bool {
+    public func batchInsert(with count: Int, update updateClosure: @escaping ([T]) -> Void) throws -> Bool {
         var results = [T]()
         for _ in 0 ..< count {
             results.append(self.context.create())
@@ -64,7 +64,7 @@ class CoreDataStorage <T: Persistable> {
     
     // MARK: - 异步处理
     
-    func query(with predicate: NSPredicate?,
+    public func query(with predicate: NSPredicate?,
                sortDescriptors: [NSSortDescriptor]?,
                complete closure: @escaping (_ result: Result<[T]?, Error>) -> Void) {
         self.context.perform { [weak self] in
@@ -78,7 +78,7 @@ class CoreDataStorage <T: Persistable> {
         }
     }
     
-    func query(with predicate: NSPredicate?,
+    public func query(with predicate: NSPredicate?,
                sortDescriptors: [NSSortDescriptor]?,
                fetchLimit: Int,
                complete closure: @escaping (_ result: Result<[T]?, Error>) -> Void) {
@@ -114,7 +114,7 @@ class CoreDataStorage <T: Persistable> {
         }
     }
     
-    func save(with predicate: NSPredicate?,
+    public func save(with predicate: NSPredicate?,
             update updateClosure: @escaping (T) -> Void,
             complete completeClosure: @escaping (Result<T, Error>) -> Void) {
         self.context.perform { [weak self] in
@@ -128,7 +128,7 @@ class CoreDataStorage <T: Persistable> {
         }
     }
         
-    func delete(with predicate: NSPredicate, complete closure: @escaping (Error?) -> Void) {
+    public func delete(with predicate: NSPredicate, complete closure: @escaping (Error?) -> Void) {
         self.context.perform { [weak self] in
             guard let `self` = self else { return }
             do {
@@ -140,7 +140,7 @@ class CoreDataStorage <T: Persistable> {
         }
     }
     
-    func batchUpdate(with predicate: NSPredicate,
+    public func batchUpdate(with predicate: NSPredicate,
                update updateClosure: @escaping ([T]?) -> Void,
            complete completeClosure: @escaping (Error?) -> Void) {
         self.context.perform { [weak self] in
@@ -159,7 +159,7 @@ class CoreDataStorage <T: Persistable> {
         
     }
     
-    func batchInsert(with count: Int,
+    public func batchInsert(with count: Int,
            update updateClosure: @escaping ([T]) -> Void,
        complete completeClosure: @escaping (Error?) -> Void) {
         self.context.perform { [weak self] in
@@ -172,7 +172,7 @@ class CoreDataStorage <T: Persistable> {
         }
     }
     
-    func batchDelete(with predicate: NSPredicate,
+    public func batchDelete(with predicate: NSPredicate,
                    complete closure: @escaping (Error?) -> Void) {
         self.context.perform { [weak self] in
             guard let `self` = self else { return }

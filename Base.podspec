@@ -21,7 +21,7 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/chenshuangma@foxmail.com/Base.git', :branch => "master" }
   s.ios.deployment_target = '12.0'
 
-  s.source_files = 'Base/**/*.{h,m,swift'
+  s.source_files = 'Base/**/*.{h,m,swift}'
   s.public_header_files = "Base/**/*.h"
   s.frameworks = "AudioToolbox", 'CoreVideo'
   s.static_framework = true
@@ -30,7 +30,7 @@ TODO: Add long description of the pod here.
   s.dependency 'UMDevice', '~> 2.2.0' # 统计
   s.dependency 'Bugly', '~> 2.5.0' # 崩溃
   s.dependency 'CocoaLumberjack/Swift', '~> 3.7.0' # 日志
-  s.dependency 'Kingfisher', '~> 7.2.0'
+  s.dependency 'Kingfisher', '~> 7.6.0'
   s.dependency 'HandyJSON', '~> 5.0.0'
   s.dependency 'Moya', '~> 15.0.0'
   s.dependency 'RxSwift', '~> 5.1.0'

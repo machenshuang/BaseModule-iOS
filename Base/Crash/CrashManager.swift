@@ -8,8 +8,8 @@
 import Foundation
 import Bugly
 
-class CrashManager: NSObject {
-    static let shared = CrashManager()
+public class CrashManager: NSObject {
+    public static let shared = CrashManager()
     
     override init() {
         super.init()
@@ -44,7 +44,7 @@ class CrashManager: NSObject {
 }
 
 extension CrashManager: BuglyDelegate {
-    func attachment(for exception: NSException?) -> String? {
+    public func attachment(for exception: NSException?) -> String? {
         guard let content = log.getLogFileContent() else {
             return nil
         }

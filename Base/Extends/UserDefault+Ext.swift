@@ -11,30 +11,6 @@ public protocol UserDefaultsSettingEnable {
     associatedtype defaultKeys: RawRepresentable
 }
 
-public extension UserDefaults {
-    struct Camera: UserDefaultsSettingEnable {
-        public enum defaultKeys: String {
-            case userFilterId   // 影集 id
-            case frontFacing    // 相机镜头方向
-            case flashOn    // 闪光灯是否打开
-        }
-    }
-    
-    struct Common: UserDefaultsSettingEnable {
-        public enum defaultKeys: String {
-            case albumIdentifier    // 相册id
-            case layoutType // 布局类型
-        }
-    }
-    
-    struct Setting: UserDefaultsSettingEnable {
-        public enum defaultKeys: String {
-            case saveLocal    // 是否保存到原图
-        }
-    }
-}
-
-
 public extension UserDefaultsSettingEnable where defaultKeys.RawValue == String {
     
     static func setArray(value: Array<Any>?, forKey key: defaultKeys) {

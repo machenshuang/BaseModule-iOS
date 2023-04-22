@@ -8,13 +8,13 @@
 import Foundation
 import CoreData
 
-protocol Persistable: NSFetchRequestResult {
+public protocol Persistable: NSFetchRequestResult {
     static func fetchRequest() -> NSFetchRequest<Self>
     static func entityName() -> String
 }
 
 extension NSManagedObjectContext {
-    func create<T: NSFetchRequestResult>() -> T {
+    public func create<T: NSFetchRequestResult>() -> T {
         guard let entity = NSEntityDescription.insertNewObject(forEntityName: String(describing: T.self),
                 into: self) as? T else {
             fatalError()
